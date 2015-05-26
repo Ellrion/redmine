@@ -2,6 +2,10 @@
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
+use Whoops\Run;
+use Whoops\Handler\JsonResponseHandler;
+use Whoops\Handler\PrettyPageHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -37,7 +41,25 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if (config('app.debug') && app()->environment('local')) {
+            return $this->renderExceptionWithWhoops($e, $request->ajax());
+        }
         return parent::render($request, $e);
+    }
+
+    /**
+     * Render an exception using Whoops.
+     *
+     * @param  \Exception                $e
+     * @param  bool                      $isAjax
+     * @return \Illuminate\Http\Response
+     */
+    protected function renderExceptionWithWhoops(Exception $e, $isAjax = false)
+    {
+        $whoops = new Run();
+        $whoops->pushHandler($isAjax ? new JsonResponseHandler() : new PrettyPageHandler());
+
+        return new Response($whoops->handleException($e), $e->getStatusCode(), $e->getHeaders());
     }
 
 }
