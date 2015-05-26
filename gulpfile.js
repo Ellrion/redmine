@@ -12,5 +12,6 @@ elixir.config.sourcemaps = false;
  */
 
 elixir(function(mix) {
-    mix.less('app.less');
+    mix.less('app.less')
+        .scripts(['main.js'], 'public/js/app.js');
 });
