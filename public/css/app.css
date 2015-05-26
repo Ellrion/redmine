@@ -1,5 +1,12 @@
 body > .container {
   padding-top: 60px;
 }
-
-/*# sourceMappingURL=app.css.map */
+.label.label-hidden {
+  display: none;
+}
+.list-group-item:hover .label-hidden {
+  display: inline;
+}
+.popover-content {
+  word-wrap: break-word;
+}
